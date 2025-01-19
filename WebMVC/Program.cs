@@ -1,4 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 using WebMVC.Infrastructer;
+using WebMVC.Models;
 using WebMVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,28 +13,18 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IHttpClient, CustomHttpClient>();
 builder.Services.AddTransient<IEventService, EventService>();
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = "Cookies";
-    options.DefaultChallengeScheme = "oidc";
-})
-    .AddCookie("Cookies")
-    .AddOpenIdConnect("oidc", options =>
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddTransient<ICartService, CartService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<ITokenProvider, TokenProvider>();
+builder.Services.AddTransient<IIdentityService<ApplicationUser>, IdentityService>();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
     {
-        options.Authority = configuration["IdentityUrl"];
-        options.RequireHttpsMetadata = false;
-
-        options.ClientId = "mvc";
-        options.ClientSecret = "49C1A7E1-0C79-4A89-A3D6-A37998FB86B0";
-        options.ResponseType = "code id_token";
-
-        options.Scope.Clear();
-        options.Scope.Add("openid");
-        options.Scope.Add("profile");
-
-        options.MapInboundClaims = false; // Don't rename claim types
-
-        options.SaveTokens = true;
+        options.ExpireTimeSpan = TimeSpan.FromHours(10);
+        options.LoginPath = "/Auth/Login";
+        options.AccessDeniedPath = "/Auth/AccessDenied";
     });
 
 var app = builder.Build();
@@ -47,7 +41,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
