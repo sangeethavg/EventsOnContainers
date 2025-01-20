@@ -80,7 +80,7 @@ namespace WebMVC.Controllers
                 HandleBrokenCircuitException();
             }
 
-            return RedirectToAction("Index", "Catalog");
+            return RedirectToAction("Index", "Event");
 
         }
 

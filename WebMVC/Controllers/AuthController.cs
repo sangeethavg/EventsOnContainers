@@ -40,7 +40,7 @@ namespace WebMVC.Controllers
 
                 await SignInUser(loginResponseDto);
                 _tokenProvider.SetToken(loginResponseDto.Token);
-                return RedirectToAction("Index", "Catalog");
+                return RedirectToAction("Index", "Event");
             }
             else
             {

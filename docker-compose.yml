@@ -76,7 +76,7 @@ services:
       }
     environment:
       IdentityUrl: http://192.168.0.8:7010
-      ConnectionString: "Data Source=mssqlserver;Initial Catalog=OrdersDb;User Id=sa;Password=ProductApi123(!);Connect Timeout=30;TrustServerCertificate=false;Encrypt=false;"
+      ConnectionString: "Data Source=mssqlserver; Initial Catalog=OrdersDb; User Id=sa; Password=EventApi123(!); Connect Timeout=30; TrustServerCertificate=false; Encrypt=false;"
       ASPNETCORE_HTTP_PORTS: 80
       JWT__Secret: "your_net_net_net_new_base64_encoded_key"
       JWT__Issuer: "auth-api"
@@ -136,7 +136,7 @@ services:
       MSSQL_SA_PASSWORD: TokenApi123(!)
     ports:
       - "1449:1433"
-    container_name: jewelstokensqlserver
+    container_name: eventsstokensqlserver
     networks:
       - backend
    
